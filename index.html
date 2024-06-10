@@ -6,16 +6,6 @@
     <title>Joke Generator</title>
     <link href="https://fonts.cdnfonts.com/css/pixelcraft-2" rel="stylesheet">
     <style>
-        /* Hide scrollbar for WebKit browsers (Chrome, Safari, Opera) */
-        .content::-webkit-scrollbar {
-            display: none;
-        }
-
-        /* Hide scrollbar for IE, Edge and Firefox */
-        .content {
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;     /* Firefox */
-        }
         body {
             display: flex;
             justify-content: center;
@@ -26,11 +16,19 @@
             background-size: cover;
             background-position: center;
             font-family: Arial, sans-serif;
+            overflow: hidden; /* Hide body scrollbar */
         }
         .container {
             text-align: center;
             font-family: 'PixelCraft', sans-serif;
             font-size: 25px;
+            overflow-y: scroll; /* Enable vertical scrolling */
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;     /* Firefox */
+        }
+        /* Hide scrollbar for WebKit browsers (Chrome, Safari, Opera) */
+        .container::-webkit-scrollbar {
+            display: none;
         }
         .jokebox {
             color: white;
@@ -71,19 +69,18 @@
         button:active {
             transform: scale(0.9);
         }
-        .noncopy{
+        .noncopy {
             user-select: none;
         }
-        .clipboard{
+        .clipboard {
             user-select: none;
-            width:10vh;
+            width: 10vh;
         }
-        
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="jokebox onclick="copyToClipboard()">
+        <div class="jokebox">
             <div id="joke" onclick="copyToClipboard()" class="noncopy">↓ Click the button ↓</div>
             <img src="https://files.catbox.moe/40u0af.png" alt="COPY" class="clipboard" onclick="copyToClipboard()">
         </div>
@@ -99,6 +96,7 @@
         function copyToClipboard() {
             const jokeText = document.getElementById('joke').textContent;
             navigator.clipboard.writeText(jokeText).then(() => {
+                console.log('Text copied to clipboard');
             }).catch(err => {
                 console.error('Failed to copy the text to clipboard', err);
             });
