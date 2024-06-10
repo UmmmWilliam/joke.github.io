@@ -6,6 +6,16 @@
     <title>Joke Generator</title>
     <link href="https://fonts.cdnfonts.com/css/pixelcraft-2" rel="stylesheet">
     <style>
+        /* Hide scrollbar for WebKit browsers (Chrome, Safari, Opera) */
+        .content::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .content {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;     /* Firefox */
+        }
         body {
             display: flex;
             justify-content: center;
@@ -68,6 +78,7 @@
             user-select: none;
             width:10vh;
         }
+        
     </style>
 </head>
 <body>
