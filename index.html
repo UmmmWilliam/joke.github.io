@@ -6,7 +6,6 @@
     <title>Joke Generator</title>
     <link href="https://fonts.cdnfonts.com/css/pixelcraft-2" rel="stylesheet">
     <style>
-
         body {
             display: flex;
             justify-content: center;
@@ -14,7 +13,7 @@
             height: 100vh;
             font-family: "Lucida Console", "Courier New", monospace;
             background-image: url('https://files.catbox.moe/3w85i7.jpg');
-            background-size: cover; 
+            background-size: cover;
             background-position: center;
             font-family: Arial, sans-serif;
             overflow: hidden;
@@ -24,37 +23,57 @@
             font-family: 'PixelCraft', sans-serif;
             font-size: 25px;
         }
-        .joke {
+        .jokebox {
             color: white;
+            background-color: rgba(0, 0, 0, 0.2);
+            box-shadow: 0px 0px 10px rgb(23, 23, 23);
+            padding: 20px;
+            border-radius: 15px;
+            transition: all 0.3s linear;
+            min-width: 300px;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .jokebox:hover {
+            background-color: rgba(0, 0, 0, 0.4);
+            box-shadow: 0px 0px 0px 4px rgba(20, 20, 20, 1);
         }
         button {
             margin-top: 50px;
-            padding: 5px 20px;
-            font-size: 16px;
+            padding: 10px 20px;
+            font-size: 25px;
             cursor: pointer;
             text-align: center;
             font-family: 'PixelCraft', sans-serif;
-            font-size: 35px;
-            background-color: rgba(0, 0, 0, 0.0);
+            background-color: rgba(0, 0, 0, 0.2);
             color: white;
-            border-color: rgba(0, 0, 0, 0.0);
-            border-radius: 15px ;
+            border: none;
+            border-radius: 15px;
             box-shadow: 0px 0px 10px rgb(23, 23, 23);
             transition: all 0.3s linear;
             user-select: none;
         }
         button:hover {
-            background-color: rgba(0, 0, 0, 0.08);
-            box-shadow: 0px 0px 0px 3px rgba(20, 20, 20, 0.7);
+            background-color: rgba(0, 0, 0, 0.4);
+            box-shadow: 0px 0px 0px 4px rgba(20, 20, 20, 1);
         }
         button:active {
             transform: scale(0.9);
+        }
+        .noncopy{
+            user-select: none;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div id="joke" class="joke"></div>
+        <div class="jokebox">
+            <div id="joke" onclick="copyToClipboard()" class="noncopy">↓ Click the button ↓</div>
+            <br><br><br>
+            <div class="noncopy" onclick="copyToClipboard()">📋</div>
+        </div>
         <button onclick="getJoke()">Get a Joke</button>
     </div>
     <script>
@@ -63,6 +82,13 @@
             const data = await response.json();
             const joke = data.type === 'single' ? data.joke : `${data.setup} ${data.delivery}`;
             document.getElementById('joke').innerText = joke;
+        }
+        function copyToClipboard() {
+            const jokeText = document.getElementById('joke').textContent;
+            navigator.clipboard.writeText(jokeText).then(() => {
+            }).catch(err => {
+                console.error('Failed to copy the text to clipboard', err);
+            });
         }
     </script>
 </body>
