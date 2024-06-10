@@ -27,10 +27,9 @@
             color: white;
             background-color: rgba(0, 0, 0, 0.2);
             box-shadow: 0px 0px 10px rgb(23, 23, 23);
-            padding: 20px;
             border-radius: 15px;
             transition: all 0.3s linear;
-            min-width: 300px;
+            min-width: 10px;
             min-height: 100px;
             display: flex;
             align-items: center;
@@ -65,14 +64,17 @@
         .noncopy{
             user-select: none;
         }
+        .clipboard{
+            user-select: none;
+            width:10vh;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="jokebox">
             <div id="joke" onclick="copyToClipboard()" class="noncopy">↓ Click the button ↓</div>
-            <br><br><br>
-            <div class="noncopy" onclick="copyToClipboard()">📋</div>
+            <img src="https://files.catbox.moe/40u0af.png" alt="COPY" class="clipboard" onclick="copyToClipboard()">
         </div>
         <button onclick="getJoke()">Get a Joke</button>
     </div>
