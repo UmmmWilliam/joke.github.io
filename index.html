@@ -10,6 +10,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative;
             height: 100vh;
             font-family: "Lucida Console", "Courier New", monospace;
             background-image: url('https://files.catbox.moe/3w85i7.jpg');
@@ -69,6 +70,53 @@
             user-select: none;
             width: 10vh;
         }
+        .stm{
+            font-size: 3.5vh;
+            text-align: left;
+        }
+        .stb {
+            user-select: none;
+            width: 5vh;
+        }
+
+        /* Settings Menu Styles */
+        .settings {
+            position: fixed;
+            bottom: -100%; /* Initially hide the settings menu */
+            left: 0;
+            width: 100%;
+            max-width: 300px;
+            background-color: rgba(0, 0, 0, 0.2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+            box-shadow: 0px 0px 10px rgb(23, 23, 23);
+            transition: all 0.3s ease;
+            font-family: 'PixelCraft', sans-serif;
+        }
+        .settings.visible {
+            bottom: 0; 
+        }
+        .settings:hover{
+            background-color: rgba(0, 0, 0, 0.4);
+            box-shadow: 0px 0px 0px 4px rgba(20, 20, 20, 1);
+        }
+        .setting-label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            color: white;
+            user-select: none;
+        }
+
+        .setting-label input[type="checkbox"] {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -76,37 +124,63 @@
     <div class="container">
         <div class="jokebox">
             <div id="joke" onclick="copyToClipboard()" class="noncopy">↓ Click the button ↓</div>
-            <img src="https://files.catbox.moe/40u0af.png" alt="COPY" class="clipboard" onclick="copyToClipboard()">
+            <img src="https://files.catbox.moe/q9e2wo.png" alt="COPY" class="clipboard" onclick="copyToClipboard()">
         </div>
         <button onclick="getJoke()">Get a Joke</button>
+        <button onclick="toggleSettings()"><img class="stb" src="https://files.catbox.moe/3pxmcn.png" alt="SETTINGS"></button>
     </div>
+    <div class="settings" id="settingsMenu">
+        <div class="stm">SETTINGS</div>
+        <label for="DSetting" class="setting-label">
+            <input type="checkbox" id="DSetting" class="setting-checkbox" checked>
+            Dad Jokes
+        </label>
+        <label for="CNSetting" class="setting-label">
+            <input type="checkbox" id="CNSetting" class="setting-checkbox">
+            Chuck Norris Jokes
+        </label>
+    </div>
+    
     <script>
         const limit = 1;
         const apiKey = 'W0GE56n71tA47FF6ldqCgw==0fedCVk9VkkXfjwh';
 
         function getJoke() {
-            $.ajax({
-                method: 'GET',
-                url: 'https://api.api-ninjas.com/v1/jokes?limit=' + limit,
-                headers: { 'X-Api-Key': apiKey },
-                contentType: 'application/json',
-                success: function(result) {
-                    const joke = result[0].joke;
-                    const jokeElement = document.getElementById('joke');
-                    jokeElement.innerText = joke;
-                    adjustFontSize(jokeElement, joke);
-                },
-                error: function ajaxError(jqXHR) {
-                    console.error('Error: ', jqXHR.responseText);
+        const chuckNorrisCheckbox = document.getElementById('CNSetting');
+        const url = chuckNorrisCheckbox.checked ? 'https://api.api-ninjas.com/v1/chucknorris' : 'https://api.api-ninjas.com/v1/jokes';
+
+        $.ajax({
+            method: 'GET',
+            url: url,
+            headers: { 'X-Api-Key': apiKey },
+            contentType: 'application/json',
+            success: function(result) {
+                console.log(result);
+                let joke;
+                if (chuckNorrisCheckbox.checked) {
+                    joke = result.joke; // For Chuck Norris jokes
+                } else {
+                    joke = result[0].joke; // For normal jokes
                 }
-            });
+                const jokeElement = document.getElementById('joke');
+                jokeElement.innerText = joke;
+                adjustFontSize(jokeElement, joke);
+            },
+            error: function ajaxError(jqXHR) {
+                console.error('Error: ', jqXHR.responseText);
+            }
+        });
+    }
+        function toggleSettings() {
+            const settingsMenu = document.getElementById('settingsMenu');
+            settingsMenu.classList.toggle('visible');
         }
 
-        function adjustFontSize(element, text) {
-            const baseSize = 25; // Base font size in pixels
-            const maxLength = 50; // Maximum length of the joke for the base size
-            const newSize = Math.max(10, baseSize - (text.length - maxLength) / 15); // Decrease font size as text length increases
-            element.style.fontSize = newSize + 'px';
+        function adjustFontSize(element, joke) {
+            const baseSize = 25;
+            const maxLength = 50; 
+            const newSize = Math.max(10, baseSize - (joke.length - maxLength) / 5); 
+            element.style.fontSize = `${newSize}px`;
         }
 
         function copyToClipboard() {
@@ -117,6 +191,19 @@
                 console.error('Failed to copy the text to clipboard', err);
             });
         }
+
+        // Add an event listener to all checkboxes with class 'setting-checkbox'
+        const checkboxes = document.querySelectorAll('.setting-checkbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('click', function() {
+                // Uncheck all other checkboxes when one is clicked
+                checkboxes.forEach(otherCheckbox => {
+                    if (otherCheckbox !== checkbox) {
+                        otherCheckbox.checked = false;
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>
