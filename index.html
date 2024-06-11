@@ -91,12 +91,21 @@
                 contentType: 'application/json',
                 success: function(result) {
                     const joke = result[0].joke;
-                    document.getElementById('joke').innerText = joke;
+                    const jokeElement = document.getElementById('joke');
+                    jokeElement.innerText = joke;
+                    adjustFontSize(jokeElement, joke);
                 },
                 error: function ajaxError(jqXHR) {
                     console.error('Error: ', jqXHR.responseText);
                 }
             });
+        }
+
+        function adjustFontSize(element, text) {
+            const baseSize = 25; // Base font size in pixels
+            const maxLength = 100; // Maximum length of the joke for the base size
+            const newSize = Math.max(10, baseSize - (text.length - maxLength) / 10); // Decrease font size as text length increases
+            element.style.fontSize = newSize + 'px';
         }
 
         function copyToClipboard() {
