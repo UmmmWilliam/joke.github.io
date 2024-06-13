@@ -11,17 +11,15 @@
             justify-content: center;
             position: relative;
             height: 100vh;
-            font-family: "Lucida Console", "Courier New", monospace;
             background-image: url('https://files.catbox.moe/3w85i7.jpg');
             background-size: cover;
             background-position: center;
-            font-family: Arial, sans-serif;
+            font-family: 'PixelCraft', sans-serif;
             overflow: hidden;
         }
         .container {
             padding-top: 3vh;
             text-align: center;
-            font-family: 'PixelCraft', sans-serif;
             font-size: 25px;
         }
         .jokebox {
@@ -47,7 +45,6 @@
             font-size: 25px;
             cursor: pointer;
             text-align: center;
-            font-family: 'PixelCraft', sans-serif;
             background-color: rgba(0, 0, 0, 0.2);
             color: white;
             border: none;
@@ -55,6 +52,7 @@
             box-shadow: 0px 0px 10px rgb(23, 23, 23);
             transition: all 0.3s linear;
             user-select: none;
+            font-family: 'PixelCraft', sans-serif;
         }
         button:hover {
             background-color: rgba(0, 0, 0, 0.4);
@@ -78,11 +76,9 @@
             user-select: none;
             width: 5vh;
         }
-
-        /* Settings Menu Styles */
         .settings {
             position: fixed;
-            bottom: -100%; /* Initially hide the settings menu */
+            bottom: -100%;
             left: 0;
             width: 60%;
             max-width: 300px;
@@ -97,7 +93,7 @@
         .settings.visible {
             bottom: 0; 
         }
-        .settings:hover{
+        .settings:hover {
             background-color: rgba(0, 0, 0, 0.4);
             box-shadow: 0px 0px 0px 4px rgba(20, 20, 20, 1);
         }
@@ -109,7 +105,6 @@
             color: white;
             user-select: none;
         }
-
         .setting-label input[type="checkbox"] {
             display: inline-block;
             vertical-align: middle;
@@ -131,46 +126,62 @@
     </div>
     <div class="settings" id="settingsMenu">
         <div class="stm">SETTINGS</div>
-        <label for="DSetting" class="setting-label">
-            <input type="checkbox" id="DSetting" class="setting-checkbox" checked>
-            Dad Jokes
+        <label for="JSETTING" class="setting-label">
+            <input type="checkbox" id="JSETTING" class="setting-checkbox" checked>
+            Jokes
         </label>
         <label for="CNSetting" class="setting-label">
             <input type="checkbox" id="CNSetting" class="setting-checkbox">
             Chuck Norris Jokes
         </label>
+        <label for="DJSetting" class="setting-label">
+            <input type="checkbox" id="DJSetting" class="setting-checkbox">
+            Dad Jokes
+        </label>
     </div>
     
     <script>
-        const limit = 1;
         const apiKey = 'W0GE56n71tA47FF6ldqCgw==0fedCVk9VkkXfjwh';
 
         function getJoke() {
-        const chuckNorrisCheckbox = document.getElementById('CNSetting');
-        const url = chuckNorrisCheckbox.checked ? 'https://api.api-ninjas.com/v1/chucknorris' : 'https://api.api-ninjas.com/v1/jokes';
+            const jokeCheckbox = document.getElementById('JSETTING');
+            const chuckNorrisCheckbox = document.getElementById('CNSetting');
+            const dadJokesCheckbox = document.getElementById('DJSetting');
+            let url;
 
-        $.ajax({
-            method: 'GET',
-            url: url,
-            headers: { 'X-Api-Key': apiKey },
-            contentType: 'application/json',
-            success: function(result) {
-                console.log(result);
-                let joke;
-                if (chuckNorrisCheckbox.checked) {
-                    joke = result.joke; // For Chuck Norris jokes
-                } else {
-                    joke = result[0].joke; // For normal jokes
-                }
-                const jokeElement = document.getElementById('joke');
-                jokeElement.innerText = joke;
-                adjustFontSize(jokeElement, joke);
-            },
-            error: function ajaxError(jqXHR) {
-                console.error('Error: ', jqXHR.responseText);
+            if (chuckNorrisCheckbox.checked) {
+                url = 'https://api.api-ninjas.com/v1/chucknorris';
+            } else if (dadJokesCheckbox.checked) {
+                url = 'https://api.api-ninjas.com/v1/dadjokes';
+            } else {
+                url = 'https://api.api-ninjas.com/v1/jokes?limit=1';
             }
-        });
-    }
+
+            $.ajax({
+                method: 'GET',
+                url: url,
+                headers: { 'X-Api-Key': apiKey },
+                contentType: 'application/json',
+                success: function(result) {
+                    console.log(result);
+                    let joke;
+                    if (chuckNorrisCheckbox.checked) {
+                        joke = result.joke; // For Chuck Norris jokes
+                    } else if (dadJokesCheckbox.checked) {
+                        joke = result[0].joke; // For Dad jokes
+                    } else {
+                        joke = result[0].joke; // For normal jokes
+                    }
+                    const jokeElement = document.getElementById('joke');
+                    jokeElement.innerText = joke;
+                    adjustFontSize(jokeElement, joke);
+                },
+                error: function ajaxError(jqXHR) {
+                    console.error('Error: ', jqXHR.responseText);
+                }
+            });
+        }
+
         function toggleSettings() {
             const settingsMenu = document.getElementById('settingsMenu');
             settingsMenu.classList.toggle('visible');
@@ -192,11 +203,9 @@
             });
         }
 
-        // Add an event listener to all checkboxes with class 'setting-checkbox'
         const checkboxes = document.querySelectorAll('.setting-checkbox');
         checkboxes.forEach(checkbox => {
             checkbox.addEventListener('click', function() {
-                // Uncheck all other checkboxes when one is clicked
                 checkboxes.forEach(otherCheckbox => {
                     if (otherCheckbox !== checkbox) {
                         otherCheckbox.checked = false;
