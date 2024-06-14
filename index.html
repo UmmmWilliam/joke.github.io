@@ -111,6 +111,25 @@
             margin-right: 10px;
             cursor: pointer;
         }
+        .textbox{
+            margin-top: 50px;
+            padding: 10px 20px;
+            font-size: 25px;
+            cursor: pointer;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.2);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0px 0px 10px rgb(23, 23, 23);
+            transition: all 0.3s linear;
+            user-select: none;
+            font-family: 'PixelCraft', sans-serif;
+        }
+        .textbox:hover {
+            background-color: rgba(0, 0, 0, 0.4);
+            box-shadow: 0px 0px 0px 4px rgba(20, 20, 20, 1);
+        }
 
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -118,10 +137,11 @@
 <body>
     <div class="container">
         <div class="jokebox">
-            <div id="joke" onclick="copyToClipboard()" class="noncopy">↓ Click the button ↓</div>
+            <div id="joke" onclick="copyToClipboard()" class="noncopy"></div>
             <img src="https://files.catbox.moe/q9e2wo.png" alt="COPY" class="clipboard" onclick="copyToClipboard()">
         </div>
-        <button onclick="getJoke()">Get a Joke</button>
+        <button onclick="getJoke()">Go!</button>
+        <input type="text" name="textbox" id="textbox" class="textbox" placeholder="Input Here">
         <button onclick="toggleSettings()"><img class="stb" src="https://files.catbox.moe/3pxmcn.png" alt="SETTINGS"></button>
     </div>
     <div class="settings" id="settingsMenu">
