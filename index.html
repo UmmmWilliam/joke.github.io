@@ -34,6 +34,7 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
+            max-width: 80%;
         }
         .jokebox:hover {
             background-color: rgba(0, 0, 0, 0.4);
@@ -138,7 +139,7 @@
 <body>
     <div class="container">
         <div class="jokebox">
-            <div id="joke" onclick="copyToClipboard()" class="noncopy">...</div>
+            <div id="joke" onclick="copyToClipboard()" class="noncopy">N/D</div>
             <img src="https://files.catbox.moe/q9e2wo.png" alt="COPY" class="clipboard" onclick="copyToClipboard()">
         </div>
         <button onclick="getJoke()">Go!</button>
