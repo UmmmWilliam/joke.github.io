@@ -121,6 +121,7 @@
             <img src="https://files.catbox.moe/q9e2wo.png" alt="COPY" class="clipboard" onclick="copyToClipboard()">
         </div>
         <button onclick="getJoke()">Go!</button>
+        <button onclick="speak()"><img src="https://files.catbox.moe/4n7v78.png" alt="SPEAK" class="stb"></button>
         <button onclick="toggleSettings()"><img class="stb" src="https://files.catbox.moe/3pxmcn.png" alt="SETTINGS"></button>
     </div>
     <div class="settings" id="settingsMenu">
@@ -212,6 +213,14 @@
                 });
             });
         });
+
+        function speak(){
+            const jokeText = document.getElementById('joke').textContent;
+            const utterance = new SpeechSynthesisUtterance(jokeText);
+            const voices = speechSynthesis.getVoices();
+            utterance.voice = voices[0];
+            speechSynthesis.speak(utterance);
+        }
     </script>
 </body>
 </html>
