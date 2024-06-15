@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joke Generator</title>
+    <link href="https://fonts.cdnfonts.com/css/pixelcraft-2" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            position: relative;
+            height: 100vh;
+            background-image: url('https://files.catbox.moe/3w85i7.jpg');
+            background-size: cover;
+            background-position: center;
+            font-family: 'PixelCraft', sans-serif;
+            overflow: hidden;
+        }
+        .container {
+            padding-top: 3vh;
+            text-align: center;
+            font-size: 25px;
+        }
+        .jokebox {
+            color: white;
+            background-color: rgba(0, 0, 0, 0.2);
+            box-shadow: 0px 0px 10px rgb(23, 23, 23);
+            border-radius: 15px;
+            transition: all 0.3s linear;
+            min-width: 10px;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .jokebox:hover {
+            background-color: rgba(0, 0, 0, 0.4);
+            box-shadow: 0px 0px 0px 4px rgba(20, 20, 20, 1);
+        }
+        button {
+            margin-top: 50px;
+            padding: 10px 20px;
+            font-size: 25px;
+            cursor: pointer;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.2);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0px 0px 10px rgb(23, 23, 23);
+            transition: all 0.3s linear;
+            user-select: none;
+            font-family: 'PixelCraft', sans-serif;
+        }
+        button:hover {
+            background-color: rgba(0, 0, 0, 0.4);
+            box-shadow: 0px 0px 0px 4px rgba(20, 20, 20, 1);
+        }
+        button:active {
+            transform: scale(0.9);
+        }
+        .noncopy {
+            user-select: none;
+        }
+        .clipboard {
+            user-select: none;
+            width: 10vh;
+        }
+        .stm{
+            font-size: 3.5vh;
+            text-align: left;
+        }
+        .stb {
+            user-select: none;
+            width: 5vh;
+        }
+        .settings {
+            position: fixed;
+            bottom: -100%;
+            left: 0;
+            width: 60%;
+            max-width: 300px;
+            background-color: rgba(0, 0, 0, 0.2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+            box-shadow: 0px 0px 10px rgb(23, 23, 23);
+            transition: all 0.3s ease;
+            font-family: 'PixelCraft', sans-serif;
+        }
+        .settings.visible {
+            bottom: 0; 
+        }
+        .settings:hover {
+            background-color: rgba(0, 0, 0, 0.4);
+            box-shadow: 0px 0px 0px 4px rgba(20, 20, 20, 1);
+        }
+        .setting-label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            color: white;
+            user-select: none;
+        }
+        .setting-label input[type="checkbox"] {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="jokebox">
+            <div id="joke" onclick="copyToClipboard()" class="noncopy">N/D</div>
+            <img src="https://files.catbox.moe/q9e2wo.png" alt="COPY" class="clipboard" onclick="copyToClipboard()">
+        </div>
+        <button onclick="getJoke()">Go!</button>
+        <button onclick="toggleSettings()"><img class="stb" src="https://files.catbox.moe/3pxmcn.png" alt="SETTINGS"></button>
+    </div>
+    <div class="settings" id="settingsMenu">
+        <div class="stm">SETTINGS</div>
+        <label for="JSETTING" class="setting-label">
+            <input type="checkbox" id="JSETTING" class="setting-checkbox" checked>
+            Jokes
+        </label>
+        <label for="CNSetting" class="setting-label">
+            <input type="checkbox" id="CNSetting" class="setting-checkbox">
+            Chuck Norris Jokes
+        </label>
+        <label for="DJSetting" class="setting-label">
+            <input type="checkbox" id="DJSetting" class="setting-checkbox">
+            Dad Jokes
+        </label>
+    </div>
+    
+    <script>
+        const apiKey = 'W0GE56n71tA47FF6ldqCgw==0fedCVk9VkkXfjwh';
+
+        function getJoke() {
+            const jokeCheckbox = document.getElementById('JSETTING');
+            const chuckNorrisCheckbox = document.getElementById('CNSetting');
+            const dadJokesCheckbox = document.getElementById('DJSetting');
+            let url;
+
+            if (chuckNorrisCheckbox.checked) {
+                url = 'https://api.api-ninjas.com/v1/chucknorris';
+            } else if (dadJokesCheckbox.checked) {
+                url = 'https://api.api-ninjas.com/v1/dadjokes';
+            } else {
+                url = 'https://api.api-ninjas.com/v1/jokes?limit=1';
+            }
+
+            $.ajax({
+                method: 'GET',
+                url: url,
+                headers: { 'X-Api-Key': apiKey },
+                contentType: 'application/json',
+                success: function(result) {
+                    console.log(result);
+                    let joke;
+                    if (chuckNorrisCheckbox.checked) {
+                        joke = result.joke; // For Chuck Norris jokes
+                    } else if (dadJokesCheckbox.checked) {
+                        joke = result[0].joke; // For Dad jokes
+                    } else {
+                        joke = result[0].joke; // For normal jokes
+                    }
+                    const jokeElement = document.getElementById('joke');
+                    jokeElement.innerText = joke;
+                    adjustFontSize(jokeElement, joke);
+                },
+                error: function ajaxError(jqXHR) {
+                    console.error('Error: ', jqXHR.responseText);
+                }
+            });
+        }
+
+        function toggleSettings() {
+            const settingsMenu = document.getElementById('settingsMenu');
+            settingsMenu.classList.toggle('visible');
+        }
+
+        function adjustFontSize(element, joke) {
+            const baseSize = 25;
+            const maxLength = 50; 
+            const newSize = Math.max(10, baseSize - (joke.length - maxLength) / 5); 
+            element.style.fontSize = `${newSize}px`;
+        }
+
+        function copyToClipboard() {
+            const jokeText = document.getElementById('joke').textContent;
+            navigator.clipboard.writeText(jokeText).then(() => {
+                console.log('Text copied to clipboard');
+            }).catch(err => {
+                console.error('Failed to copy the text to clipboard', err);
+            });
+        }
+
+        const checkboxes = document.querySelectorAll('.setting-checkbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('click', function() {
+                checkboxes.forEach(otherCheckbox => {
+                    if (otherCheckbox !== checkbox) {
+                        otherCheckbox.checked = false;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
