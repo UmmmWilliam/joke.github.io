@@ -53,6 +53,7 @@
             transition: all 0.3s linear;
             user-select: none;
             font-family: 'PixelCraft', sans-serif;
+            position: relative;
         }
         button:hover {
             background-color: rgba(0, 0, 0, 0.4);
@@ -60,6 +61,37 @@
         }
         button:active {
             transform: scale(0.9);
+        }
+        .tooltiptext {
+            visibility: hidden;
+            width: 120px;
+            background-color: black;
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 50%;
+        }
+        button:hover .tooltiptext {
+            visibility: visible;
+            opacity: 0.4;
+        }
+        .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: black transparent transparent transparent;
         }
         .noncopy {
             user-select: none;
@@ -79,7 +111,7 @@
         .settings {
             position: fixed;
             bottom: -100%;
-            left: 0;
+            left: center;
             width: 60%;
             max-width: 300px;
             background-color: rgba(0, 0, 0, 0.2);
@@ -100,7 +132,7 @@
         .setting-label {
             display: block;
             margin-bottom: 10px;
-            font-size: 18px;
+            font-size: 2vh;
             cursor: pointer;
             color: white;
             user-select: none;
@@ -111,6 +143,9 @@
             margin-right: 10px;
             cursor: pointer;
         }
+        .br {
+            padding: 1%
+        }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -120,9 +155,18 @@
             <div id="joke" onclick="copyToClipboard()" class="noncopy">N/D</div>
             <img src="https://files.catbox.moe/q9e2wo.png" alt="COPY" class="clipboard" onclick="copyToClipboard()">
         </div>
-        <button onclick="getJoke()">Go!</button>
-        <button onclick="speak()"><img src="https://files.catbox.moe/4n7v78.png" alt="SPEAK" class="stb"></button>
-        <button onclick="toggleSettings()"><img class="stb" src="https://files.catbox.moe/3pxmcn.png" alt="SETTINGS"></button>
+        <div class="br"></div>
+        <button onclick="getJoke()">Go!
+            <span class="tooltiptext">Get a new joke</span>
+        </button>
+        <button onclick="speak()">
+            <img src="https://files.catbox.moe/4n7v78.png" alt="SPEAK" class="stb">
+            <span class="tooltiptext">Read the joke</span>
+        </button>
+        <button onclick="toggleSettings()">
+            <img class="stb" src="https://files.catbox.moe/3pxmcn.png" alt="SETTINGS">
+            <span class="tooltiptext">Settings</span>
+        </button>
     </div>
     <div class="settings" id="settingsMenu">
         <div class="stm">SETTINGS</div>
@@ -190,7 +234,7 @@
         function adjustFontSize(element, joke) {
             const baseSize = 25;
             const maxLength = 50; 
-            const newSize = Math.max(10, baseSize - (joke.length - maxLength) / 5); 
+            const newSize = Math.max(10, baseSize - (joke.length - maxLength) / 15); 
             element.style.fontSize = `${newSize}px`;
         }
 
