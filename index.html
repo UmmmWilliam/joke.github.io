@@ -15,7 +15,8 @@
             justify-content: center;
             position: relative;
             height: 100vh;
-            background-image: url('https://files.catbox.moe/3w85i7.jpg');
+            background: rgb(27,113,14);
+            background: linear-gradient(135deg, rgba(27,113,14,1) 0%, rgba(42,41,38,1) 40%);
             background-size: cover;
             background-position: center;
             font-family: 'PixelCraft', sans-serif;
@@ -138,6 +139,8 @@
             transition: all 0.3s ease;
             font-family: 'PixelCraft', sans-serif;
             visibility: hidden;
+            overflow: auto;
+            scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
         }
         .settings.visible {
             bottom: 0;
@@ -170,6 +173,23 @@
             width: 4vh; 
             padding-right: 10px;
         }
+        .about,.bgc {
+            padding-left: 10px;
+        }
+        .bgc {
+            color: white;
+            font-size: 20px;
+        }
+        #colorPicker {
+            width: 30px;
+            height: 30px;
+            border-radius: 10%;
+            cursor: pointer;
+            margin-left: 10px;
+            border: none;
+            outline: none;
+            background-color: rgba(0, 0, 0, 0.2);
+        }           
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -196,8 +216,8 @@
             <span class="tooltiptext">Share!</span>
         </button>
     </div>
-    <div class="settings" id="settingsMenu" onclick="toggleSettings()">
-        <div class="stm">
+    <div class="settings" id="settingsMenu">
+        <div class="stm"  onclick="toggleSettings()">
             <p>SETTINGS</p>
             <img src="https://files.catbox.moe/8zxl8r.png" alt="CLOSE" class="close">
         </div>
@@ -214,8 +234,12 @@
             Dad Jokes
         </label>
         <div class="br"></div>
+        <p class="stm">Customise</p>
+        <div class="customisation">
+            <p class="bgc">Background Color: <input type="color" id="colorPicker" value="#1b710e"></p>
+        </div>
+        <p class="stm">Credits</p>
         <div class="about">
-            <p>Credits: </p>
             <p>All jokes are from <a href="https://api-ninjas.com/">api-ninjas</a></p>
             <p>Website developed by William Tayeh 2024</p>
         </div>
@@ -321,6 +345,16 @@
                 console.warn('Web Share API is not supported in your browser');
             }
         }
+        
+        document.addEventListener('DOMContentLoaded', function () {
+            const colorPicker = document.getElementById('colorPicker');
+
+            colorPicker.addEventListener('input', function () {
+                const selectedColor = colorPicker.value;
+                document.body.style.background = `linear-gradient(135deg, ${selectedColor} 0%, rgba(42,41,38,1) 40%)`;
+            });
+        });
+
     </script>
 </body>
 </html>
