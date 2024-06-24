@@ -187,6 +187,10 @@
             <img class="stb" src="https://files.catbox.moe/3pxmcn.png" alt="SETTINGS">
             <span class="tooltiptext">Settings</span>
         </button>
+        <button onclick="shareJoke()">
+            <img src="https://files.catbox.moe/gfn6vd.png" alt="SHARE" class="stb">
+            <span class="tooltiptext">Share!</span>
+        </button>
     </div>
     <div class="settings" id="settingsMenu" onclick="toggleSettings()">
         <div class="stm">
@@ -209,7 +213,7 @@
         <div class="about">
             <p>Credits: </p>
             <p>All jokes are from <a href="https://api-ninjas.com/">api-ninjas</a></p>
-            <p>Website developped by William Tayeh 2024</p>
+            <p>Website developed by William Tayeh 2024</p>
         </div>
     </div>
     
@@ -295,6 +299,23 @@
             const voices = speechSynthesis.getVoices();
             utterance.voice = voices[0];
             speechSynthesis.speak(utterance);
+        }
+        
+        function shareJoke() {
+            const jokeText = document.getElementById('joke').textContent;
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Joke',
+                    text: jokeText,
+                    url: window.location.href
+                }).then(() => {
+                    console.log('Joke shared successfully');
+                }).catch((error) => {
+                    console.error('Error sharing joke:', error);
+                });
+            } else {
+                console.warn('Web Share API is not supported in your browser');
+            }
         }
     </script>
 </body>
