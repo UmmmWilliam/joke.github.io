@@ -21,6 +21,12 @@
             padding-top: 3vh;
             text-align: center;
             font-size: 25px;
+            top: 0;
+            position: relative;
+            transition: top 0.3s ease;
+        }
+        .container.hidden {
+            top: -100vh;
         }
         .jokebox {
             color: white;
@@ -101,8 +107,12 @@
             width: 10vh;
         }
         .stm{
-            font-size: 3.5vh;
-            text-align: left;
+            font-size: 5vh;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;  
+            user-select: none;    
         }
         .stb {
             user-select: none;
@@ -113,7 +123,7 @@
             bottom: -100%;
             left: center;
             width: 60%;
-            max-width: 300px;
+            max-width: 500px;
             background-color: rgba(0, 0, 0, 0.2);
             color: white;
             padding: 20px;
@@ -132,7 +142,7 @@
         .setting-label {
             display: block;
             margin-bottom: 10px;
-            font-size: 2vh;
+            font-size: 3vh;
             cursor: pointer;
             color: white;
             user-select: none;
@@ -146,11 +156,16 @@
         .br {
             padding: 1%
         }
+        .close {
+            user-select: none;
+            width: 6vh; 
+            margin-left: 10px;
+        }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="container">
         <div class="jokebox">
             <div id="joke" onclick="copyToClipboard()" class="noncopy">N/D</div>
             <img src="https://files.catbox.moe/q9e2wo.png" alt="COPY" class="clipboard" onclick="copyToClipboard()">
@@ -168,8 +183,11 @@
             <span class="tooltiptext">Settings</span>
         </button>
     </div>
-    <div class="settings" id="settingsMenu">
-        <div class="stm">SETTINGS</div>
+    <div class="settings" id="settingsMenu" onclick="toggleSettings()">
+        <div class="stm">
+            <p>SETTINGS</p>
+            <img src="https://files.catbox.moe/8zxl8r.png" alt="CLOSE" class="close">
+        </div>
         <label for="JSETTING" class="setting-label">
             <input type="checkbox" id="JSETTING" class="setting-checkbox" checked>
             Jokes
@@ -228,7 +246,9 @@
 
         function toggleSettings() {
             const settingsMenu = document.getElementById('settingsMenu');
+            const container = document.getElementById('container')
             settingsMenu.classList.toggle('visible');
+            container.classList.toggle('hidden');
         }
 
         function adjustFontSize(element, joke) {
