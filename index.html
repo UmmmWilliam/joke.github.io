@@ -196,8 +196,11 @@
 <body>
     <div class="container" id="container">
         <div class="jokebox">
-            <div id="joke" onclick="copyToClipboard()" class="noncopy">N/D</div>
-            <img src="https://files.catbox.moe/q9e2wo.png" alt="COPY" class="clipboard" onclick="copyToClipboard()">
+            <div id="joke" onclick="copyToClipboard()" class="noncopy">Click "Go!" to start</div>
+            <div>
+                <img src="https://files.catbox.moe/q9e2wo.png" alt="COPY" class="clipboard" onclick="copyToClipboard()">
+                <p class="copy-text" style="font-size: 1.5vh;">Click to copy</p>
+            </div>
         </div>
         <div class="br"></div>
         <button onclick="getJoke()">Go!
@@ -233,6 +236,10 @@
             <input type="checkbox" id="DJSetting" class="setting-checkbox">
             Dad Jokes
         </label>
+        <label for="DAJSetting" class="setting-label">
+            <input type="checkbox" id="DAJSetting" class="setting-checkbox">
+            Dark Jokes        
+        </label>
         <div class="br"></div>
         <p class="stm">Customise</p>
         <div class="customisation">
@@ -252,12 +259,16 @@
             const jokeCheckbox = document.getElementById('JSETTING');
             const chuckNorrisCheckbox = document.getElementById('CNSetting');
             const dadJokesCheckbox = document.getElementById('DJSetting');
+            const darkJokesCheckbox = document.getElementById('DAJSetting');
+
             let url;
 
             if (chuckNorrisCheckbox.checked) {
                 url = 'https://api.api-ninjas.com/v1/chucknorris';
             } else if (dadJokesCheckbox.checked) {
                 url = 'https://api.api-ninjas.com/v1/dadjokes';
+            } else if (darkJokesCheckbox.checked) {
+                url = 'https://v2.jokeapi.dev/joke/Dark?blacklistFlags=nsfw,religious,political,racist,sexist,explicit&type=single';
             } else {
                 url = 'https://api.api-ninjas.com/v1/jokes';
             }
@@ -274,6 +285,8 @@
                         joke = result.joke; // For Chuck Norris jokes
                     } else if (dadJokesCheckbox.checked) {
                         joke = result[0].joke; // For Dad jokes
+                    } else if (darkJokesCheckbox.checked) {
+                        joke = result.joke; // For Dark jokes
                     } else {
                         joke = result[0].joke; // For normal jokes
                     }
