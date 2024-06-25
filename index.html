@@ -21,7 +21,8 @@
             background-position: center;
             font-family: 'PixelCraft', sans-serif;
             overflow: hidden;
-            user-select: none;  
+            user-select: none;
+            margin: 0;  
         }
         .container {
             padding-top: 3vh;
@@ -30,7 +31,6 @@
             top: 0;
             position: relative;
             transition: top 0.3s ease;
-            overflow: auto;
             scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
         }
         .container.hidden {
@@ -200,10 +200,8 @@
     <div class="container" id="container">
         <div class="jokebox">
             <div id="joke" onclick="copyToClipboard()" class="noncopy">Click "Go!" to start</div>
-            <div>
                 <img src="https://files.catbox.moe/q9e2wo.png" alt="COPY" class="clipboard" onclick="copyToClipboard()">
                 <p class="copy-text" style="font-size: 1.5vh;">Click to copy text</p>
-            </div>
         </div>
         <div class="br"></div>
         <button onclick="getJoke()">Go!
