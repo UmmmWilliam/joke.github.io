@@ -21,6 +21,7 @@
             background-position: center;
             font-family: 'PixelCraft', sans-serif;
             overflow: hidden;
+            user-select: none;  
         }
         .container {
             padding-top: 3vh;
@@ -29,6 +30,8 @@
             top: 0;
             position: relative;
             transition: top 0.3s ease;
+            overflow: auto;
+            scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
         }
         .container.hidden {
             top: -100vh;
@@ -199,7 +202,7 @@
             <div id="joke" onclick="copyToClipboard()" class="noncopy">Click "Go!" to start</div>
             <div>
                 <img src="https://files.catbox.moe/q9e2wo.png" alt="COPY" class="clipboard" onclick="copyToClipboard()">
-                <p class="copy-text" style="font-size: 1.5vh;">Click to copy</p>
+                <p class="copy-text" style="font-size: 1.5vh;">Click to copy text</p>
             </div>
         </div>
         <div class="br"></div>
@@ -240,6 +243,10 @@
             <input type="checkbox" id="DAJSetting" class="setting-checkbox">
             Dark Jokes        
         </label>
+        <label for="MemesSetting" class="setting-label">
+            <input type="checkbox" id="MemesSetting" class="setting-checkbox">
+            Memes
+        </label>        
         <div class="br"></div>
         <p class="stm">Customise</p>
         <div class="customisation">
@@ -247,40 +254,46 @@
         </div>
         <p class="stm">Credits</p>
         <div class="about">
-            <p>All jokes are from <a href="https://api-ninjas.com/">api-ninjas</a></p>
+            <p>All jokes are from <a href="https://api-ninjas.com/">api-ninjas</a> and <a href="https://sv443.net/jokeapi/v2/">sv443</a></p>
             <p>Website developed by William Tayeh 2024</p>
         </div>
     </div>
     
     <script>
-        const apiKey = 'W0GE56n71tA47FF6ldqCgw==0fedCVk9VkkXfjwh';
+    const apiKey = 'W0GE56n71tA47FF6ldqCgw==0fedCVk9VkkXfjwh';
 
-        function getJoke() {
-            const jokeCheckbox = document.getElementById('JSETTING');
-            const chuckNorrisCheckbox = document.getElementById('CNSetting');
-            const dadJokesCheckbox = document.getElementById('DJSetting');
-            const darkJokesCheckbox = document.getElementById('DAJSetting');
+    function getJoke() {
+        const jokeCheckbox = document.getElementById('JSETTING');
+        const chuckNorrisCheckbox = document.getElementById('CNSetting');
+        const dadJokesCheckbox = document.getElementById('DJSetting');
+        const darkJokesCheckbox = document.getElementById('DAJSetting');
+        const memesCheckbox = document.getElementById('MemesSetting');
 
-            let url;
+        let url;
 
-            if (chuckNorrisCheckbox.checked) {
-                url = 'https://api.api-ninjas.com/v1/chucknorris';
-            } else if (dadJokesCheckbox.checked) {
-                url = 'https://api.api-ninjas.com/v1/dadjokes';
-            } else if (darkJokesCheckbox.checked) {
-                url = 'https://v2.jokeapi.dev/joke/Dark?blacklistFlags=nsfw,religious,political,racist,sexist,explicit&type=single';
-            } else {
-                url = 'https://api.api-ninjas.com/v1/jokes';
-            }
+        if (memesCheckbox.checked) {
+            url = 'https://meme-api.com/gimme';
+        } else if (chuckNorrisCheckbox.checked) {
+            url = 'https://api.api-ninjas.com/v1/chucknorris';
+        } else if (dadJokesCheckbox.checked) {
+            url = 'https://api.api-ninjas.com/v1/dadjokes';
+        } else if (darkJokesCheckbox.checked) {
+            url = 'https://v2.jokeapi.dev/joke/Dark?blacklistFlags=nsfw,religious,political,racist,sexist,explicit&type=single';
+        } else {
+            url = 'https://api.api-ninjas.com/v1/jokes';
+        }
 
-            $.ajax({
-                method: 'GET',
-                url: url,
-                headers: { 'X-Api-Key': apiKey },
-                contentType: 'application/json',
-                success: function(result) {
-                    console.log(result);
-                    let joke;
+        $.ajax({
+            method: 'GET',
+            url: url,
+            headers: memesCheckbox.checked ? {} : { 'X-Api-Key': apiKey },
+            contentType: 'application/json',
+            success: function(result) {
+                let joke;
+                if (memesCheckbox.checked) {
+                    joke = result.url; // Meme image URL
+                    displayMeme(joke, result.title);
+                } else {
                     if (chuckNorrisCheckbox.checked) {
                         joke = result.joke; // For Chuck Norris jokes
                     } else if (dadJokesCheckbox.checked) {
@@ -290,84 +303,93 @@
                     } else {
                         joke = result[0].joke; // For normal jokes
                     }
-                    const jokeElement = document.getElementById('joke');
-                    jokeElement.innerText = joke;
-                    adjustFontSize(jokeElement, joke);
-                },
-                error: function ajaxError(jqXHR) {
-                    console.error('Error: ', jqXHR.responseText);
+                    displayJoke(joke);
+                }
+            },
+            error: function ajaxError(jqXHR) {
+                console.error('Error: ', jqXHR.responseText);
+            }
+        });
+    }
+
+    function displayJoke(joke) {
+        const jokeElement = document.getElementById('joke');
+        jokeElement.innerText = joke;
+        adjustFontSize(jokeElement, joke);
+    }
+
+    function displayMeme(memeUrl, memeTitle) {
+        const jokeElement = document.getElementById('joke');
+        jokeElement.innerHTML = `<img src="${memeUrl}" alt="Meme" style="max-width: 80%; height: 35vh; max-height: 50vh;"><br><p id="joke">${memeTitle}</p>`;
+    }
+
+    function toggleSettings() {
+        const settingsMenu = document.getElementById('settingsMenu');
+        const container = document.getElementById('container');
+        settingsMenu.classList.toggle('visible');
+        container.classList.toggle('hidden');
+    }
+
+    function adjustFontSize(element, joke) {
+        const baseSize = 25;
+        const maxLength = 50; 
+        const newSize = Math.max(10, baseSize - (joke.length - maxLength) / 15); 
+        element.style.fontSize = `${newSize}px`;
+    }
+
+    function copyToClipboard() {
+        const jokeText = document.getElementById('joke').textContent;
+        navigator.clipboard.writeText(jokeText).then(() => {
+            console.log('Text copied to clipboard');
+        }).catch(err => {
+            console.error('Failed to copy the text to clipboard', err);
+        });
+    }
+
+    const checkboxes = document.querySelectorAll('.setting-checkbox');
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('click', function() {
+            checkboxes.forEach(otherCheckbox => {
+                if (otherCheckbox !== checkbox) {
+                    otherCheckbox.checked = false;
                 }
             });
-        }
-
-        function toggleSettings() {
-            const settingsMenu = document.getElementById('settingsMenu');
-            const container = document.getElementById('container')
-            settingsMenu.classList.toggle('visible');
-            container.classList.toggle('hidden');
-        }
-
-        function adjustFontSize(element, joke) {
-            const baseSize = 25;
-            const maxLength = 50; 
-            const newSize = Math.max(10, baseSize - (joke.length - maxLength) / 15); 
-            element.style.fontSize = `${newSize}px`;
-        }
-
-        function copyToClipboard() {
-            const jokeText = document.getElementById('joke').textContent;
-            navigator.clipboard.writeText(jokeText).then(() => {
-                console.log('Text copied to clipboard');
-            }).catch(err => {
-                console.error('Failed to copy the text to clipboard', err);
-            });
-        }
-
-        const checkboxes = document.querySelectorAll('.setting-checkbox');
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('click', function() {
-                checkboxes.forEach(otherCheckbox => {
-                    if (otherCheckbox !== checkbox) {
-                        otherCheckbox.checked = false;
-                    }
-                });
-            });
         });
+    });
 
-        function speak(){
-            const jokeText = document.getElementById('joke').textContent;
-            const utterance = new SpeechSynthesisUtterance(jokeText);
-            const voices = speechSynthesis.getVoices();
-            utterance.voice = voices[0];
-            speechSynthesis.speak(utterance);
-        }
-        
-        function shareJoke() {
-            const jokeText = document.getElementById('joke').textContent;
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Joke',
-                    text: jokeText,
-                    url: window.location.href
-                }).then(() => {
-                    console.log('Joke shared successfully');
-                }).catch((error) => {
-                    console.error('Error sharing joke:', error);
-                });
-            } else {
-                console.warn('Web Share API is not supported in your browser');
-            }
-        }
-        
-        document.addEventListener('DOMContentLoaded', function () {
-            const colorPicker = document.getElementById('colorPicker');
+    function speak() {
+        const jokeText = document.getElementById('joke').textContent;
+        const utterance = new SpeechSynthesisUtterance(jokeText);
+        const voices = speechSynthesis.getVoices();
+        utterance.voice = voices[0];
+        speechSynthesis.speak(utterance);
+    }
 
-            colorPicker.addEventListener('input', function () {
-                const selectedColor = colorPicker.value;
-                document.body.style.background = `linear-gradient(135deg, ${selectedColor} 0%, rgba(42,41,38,1) 40%)`;
+    function shareJoke() {
+        const jokeText = document.getElementById('joke').textContent;
+        if (navigator.share) {
+            navigator.share({
+                title: 'Joke',
+                text: jokeText,
+                url: window.location.href
+            }).then(() => {
+                console.log('Joke shared successfully');
+            }).catch((error) => {
+                console.error('Error sharing joke:', error);
             });
-        });
+        } else {
+            console.warn('Web Share API is not supported in your browser');
+        }
+    }
 
+    document.addEventListener('DOMContentLoaded', function () {
+        const colorPicker = document.getElementById('colorPicker');
+
+        colorPicker.addEventListener('input', function () {
+            const selectedColor = colorPicker.value;
+            document.body.style.background = `linear-gradient(135deg, ${selectedColor} 0%, rgba(42,41,38,1) 40%)`;
+        });
+    });
     </script>
 </body>
 </html>
